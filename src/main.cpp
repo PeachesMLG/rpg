@@ -40,21 +40,23 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
 }
 
 
-void processInput(GLFWwindow *window) {
+void processInput(GLFWwindow *window, float deltaTime) {
+    const float cameraSpeed = 0.05f;
+
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        Camera::y -= 0.1f;
+        Camera::y -= cameraSpeed * deltaTime;
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        Camera::y += 0.1f;
+        Camera::y += cameraSpeed * deltaTime;
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        Camera::x += 0.1f;
+        Camera::x += cameraSpeed * deltaTime;
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        Camera::x -= 0.1f;
+        Camera::x -= cameraSpeed * deltaTime;
     }
 }
 
@@ -88,9 +90,12 @@ int main() {
 
     Renderer renderer(shaderProgram);
 
+    double lastTime = glfwGetTime();
+
     while (!glfwWindowShouldClose(window)) {
         double startTime = glfwGetTime();
-        processInput(window);
+        double deltaTime = startTime - lastTime;
+        processInput(window, (float) deltaTime);
 
         // Render Here
         glClear(GL_COLOR_BUFFER_BIT);
