@@ -9,9 +9,16 @@
 
 class Renderer {
 public:
-    static void Init();
+    Renderer(const Shader &shaderProgram);
 
-    static void Render(float Position[2], float Color[3]);
+    void Render(float Position[2], float Color[3]);
+    void Delete();
+
+private:
+    Shader shaderProgram;
+    VAO vao;
+    VBO vbo;
+    EBO ebo;
 };
 
 

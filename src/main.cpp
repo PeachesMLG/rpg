@@ -8,7 +8,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
     Camera::zoom += yoffset * 0.1f;
     Camera::zoom = std::max(0.1f, Camera::zoom);
 }
@@ -58,7 +58,12 @@ int main() {
 
     glClearColor(0.192156862745f, 0.180392156863f, 0.16862745098f, 1.0f);
 
-    Renderer::Init();
+    Shader shaderProgram(
+            "/home/chris/CLionProjects/rpg/shaders/default.vert",
+            "/home/chris/CLionProjects/rpg/shaders/default.frag"
+    );
+
+    Renderer renderer(shaderProgram);
 
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
@@ -69,11 +74,16 @@ int main() {
         float position[2] = {0.0f, 0.0f};
         float color[3] = {0.97f, 0.97f, 0.43f};
 
-        Renderer::Render(position, color);
+
+        Camera::applyView(shaderProgram.ID);
+        renderer.Render(position, color);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+
+    renderer.Delete();
+    shaderProgram.Delete();
 
     glfwTerminate();
     return 0;
