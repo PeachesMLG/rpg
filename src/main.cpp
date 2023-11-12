@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include "Renderer/Renderer.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -36,11 +37,19 @@ int main() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glClearColor(0.192156862745f, 0.180392156863f, 0.16862745098f, 1.0f);
+
+    Renderer::Init();
+
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
 
         // Render Here
         glClear(GL_COLOR_BUFFER_BIT);
+
+        float position[2] = {0.0f, 0.0f};
+        float color[3] = {0.97f, 0.97f, 0.43f};
+
+        Renderer::Render(position, color);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
