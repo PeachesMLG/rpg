@@ -8,6 +8,9 @@ class Camera {
 public:
     static void applyView(GLuint shaderId);
 
+    static float x;
+    static float y;
+
 };
 
 
