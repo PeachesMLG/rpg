@@ -4,6 +4,32 @@
 #include "Renderer/Renderer.h"
 #include "Camera.h"
 
+const GLchar *vert = R"END(
+#version 330 core
+layout (location = 0) in vec3 aPos;
+
+uniform mat4 model;
+uniform mat4 view;
+
+void main()
+{
+    gl_Position = view * model * vec4(aPos, 1.0);
+}
+)END";
+
+const GLchar *frag = R"END(
+#version 330 core
+
+out vec4 FragColor;
+
+//uniform vec3 color;
+
+void main()
+{
+    FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+}
+)END";
+
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
 }
@@ -58,14 +84,12 @@ int main() {
 
     glClearColor(0.192156862745f, 0.180392156863f, 0.16862745098f, 1.0f);
 
-    Shader shaderProgram(
-            "/home/chris/CLionProjects/rpg/shaders/default.vert",
-            "/home/chris/CLionProjects/rpg/shaders/default.frag"
-    );
+    Shader shaderProgram(vert, frag);
 
     Renderer renderer(shaderProgram);
 
     while (!glfwWindowShouldClose(window)) {
+        double startTime = glfwGetTime();
         processInput(window);
 
         // Render Here
@@ -80,6 +104,10 @@ int main() {
 
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+        double time = (glfwGetTime() - startTime) * 1000;
+        std::string title = "RPG - FPS: " + std::to_string((int) (1000 / time));
+        glfwSetWindowTitle(window, title.c_str());
     }
 
     renderer.Delete();
