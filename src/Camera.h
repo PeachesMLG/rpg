@@ -10,6 +10,7 @@ public:
 
     static float x;
     static float y;
+    static float zoom;
 
 };
 
