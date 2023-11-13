@@ -16,6 +16,7 @@ layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec2 aTexCoord;
 layout (location = 2) in float aTexId;
 
+uniform mat4 model;
 uniform mat4 view;
 
 out vec2 texCoord;
@@ -23,7 +24,7 @@ out float texId;
 
 void main()
 {
-    gl_Position = view * vec4(aPos, 1.0);
+    gl_Position = view * model * vec4(aPos, 1.0);
     texCoord = aTexCoord;
     texId = aTexId;
 }
@@ -117,7 +118,13 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         Camera::applyView(shaderProgram.ID);
-        renderer.Render();
+        for (float x = -10; x < 10; ++x) {
+            for (float y = -10; y < 10; ++y) {
+                float position[2] = {x, y};
+
+                renderer.Render(position);
+            }
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();

@@ -31,8 +31,14 @@ Renderer::Renderer(const Shader &shaderProgram) : shaderProgram(shaderProgram) {
     ebo.Unbind();
 }
 
-void Renderer::Render() {
+void Renderer::Render(float Position[2]) {
+
     shaderProgram.Activate();
+
+    auto model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(Position[0], Position[1], 0.0f));
+    int modelLog = glGetUniformLocation(shaderProgram.ID, "model");
+    glUniformMatrix4fv(modelLog, 1, GL_FALSE, glm::value_ptr(model));
 
     auto loc = glGetUniformLocation(shaderProgram.ID, "textures");
     int samplers[1] = {0};

@@ -11,7 +11,7 @@ class Renderer {
 public:
     Renderer(const Shader &shaderProgram);
 
-    void Render();
+    void Render(float Position[2]);
     void Delete();
 
 private:
