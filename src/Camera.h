@@ -3,13 +3,11 @@
 
 
 #include "glad/glad.h"
+#include "Player.h"
 
 class Camera {
 public:
-    static void applyView(GLuint shaderId);
-
-    static float x;
-    static float y;
+    static void applyView(GLuint shaderId, Player player);
     static float zoom;
 
 };

@@ -11,11 +11,13 @@
 
 class Renderer {
 public:
+    Renderer();
     Renderer(const Shader &shaderProgram, std::vector<SpriteLocation> sprites);
 
     void UpdateSprites(std::vector<SpriteLocation> sprites);
 
     void Render();
+    void Render(float positions[2]);
 
     void Delete();
 

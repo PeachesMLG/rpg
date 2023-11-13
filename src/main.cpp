@@ -8,6 +8,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 
 #include "../../dependencies/stb/stb_image.h"
+#include "Player.h"
 
 
 const GLchar *vert = R"END(
@@ -16,6 +17,7 @@ layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec2 aTexCoord;
 layout (location = 2) in float aTexId;
 
+uniform mat4 model;
 uniform mat4 view;
 
 out vec2 texCoord;
@@ -23,7 +25,7 @@ out float texId;
 
 void main()
 {
-    gl_Position = view * vec4(aPos, 1.0);
+    gl_Position = view * model * vec4(aPos, 1.0);
     texCoord = aTexCoord;
     texId = aTexId;
 }
@@ -55,23 +57,23 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
 }
 
 
-void processInput(GLFWwindow *window, float deltaTime) {
+void processInput(GLFWwindow *window, float deltaTime, Player *player) {
     const float cameraSpeed = 0.05f;
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        Camera::y -= cameraSpeed * deltaTime;
+        player->y += cameraSpeed * deltaTime;
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        Camera::y += cameraSpeed * deltaTime;
+        player->y -= cameraSpeed * deltaTime;
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        Camera::x += cameraSpeed * deltaTime;
+        player->x -= cameraSpeed * deltaTime;
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        Camera::x -= cameraSpeed * deltaTime;
+        player->x += cameraSpeed * deltaTime;
     }
 }
 
@@ -101,26 +103,23 @@ int main() {
 
     glClearColor(0.192156862745f, 0.180392156863f, 0.16862745098f, 1.0f);
 
+    Player player;
+
     Shader shaderProgram(vert, frag);
 
     auto texture = Textures::GenerateTexture("/home/chris/CLionProjects/rpg/assets/terrain.png", 0);
+
     Sprite sprite(0, 1, 1, 16, 480, 769);
-    Sprite sprite2(0, 1, 20, 16, 480, 769);
-
-    std::vector<SpriteLocation> spriteLocations1;
+    std::vector<SpriteLocation> spriteLocations;
     for (int x = -10; x < 10; ++x) {
         for (int y = -10; y < 10; ++y) {
-            spriteLocations1.push_back({sprite, static_cast<float>(x), static_cast<float>(y), 0});
+            spriteLocations.push_back({sprite, static_cast<float>(x), static_cast<float>(y), 0});
         }
     }
-    std::vector<SpriteLocation> spriteLocations2;
-    for (int x = -10; x < 10; ++x) {
-        for (int y = -10; y < 10; ++y) {
-            spriteLocations2.push_back({sprite2, static_cast<float>(x), static_cast<float>(y), 0});
-        }
-    }
+    std::vector<SpriteLocation> playerLocations = player.GetSpriteLocations();
+    spriteLocations.insert(spriteLocations.end(), playerLocations.begin(), playerLocations.end());
 
-    Renderer renderer(shaderProgram, spriteLocations1);
+    Renderer renderer(shaderProgram, spriteLocations);
 
     double lastTime = glfwGetTime();
 
@@ -130,16 +129,23 @@ int main() {
         i++;
         double startTime = glfwGetTime();
         double deltaTime = startTime - lastTime;
-        processInput(window, (float) deltaTime);
+        processInput(window, (float) deltaTime, &player);
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        Camera::applyView(shaderProgram.ID);
-        if (i % 100 < 50) {
-            renderer.UpdateSprites(spriteLocations1);
-        } else {
-            renderer.UpdateSprites(spriteLocations2);
+        Camera::applyView(shaderProgram.ID, player);
+        sprite = Sprite(0, 1, i % 100 < 50 ? 1 : 20, 16, 480, 769);
+
+        spriteLocations.clear();
+        for (int x = -10; x < 10; ++x) {
+            for (int y = -10; y < 10; ++y) {
+                spriteLocations.push_back({sprite, static_cast<float>(x), static_cast<float>(y), 0});
+            }
         }
+        playerLocations = player.GetSpriteLocations();
+        spriteLocations.insert(spriteLocations.end(), playerLocations.begin(), playerLocations.end());
+
+        renderer.UpdateSprites(spriteLocations);
         renderer.Render();
 
         glfwSwapBuffers(window);

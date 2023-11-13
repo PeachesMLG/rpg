@@ -1,4 +1,5 @@
 #include <glad/glad.h>
+#include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 #include "Renderer.h"
 #include "Vertex.h"
@@ -6,6 +7,7 @@
 #include "VAO.h"
 #include "EBO.h"
 #include "Sprite.h"
+#include "glm/gtc/type_ptr.hpp"
 
 void Renderer::setIndicies(std::vector<SpriteLocation> sprites) {
     for (auto i = 0; i < sprites.size(); ++i) {
@@ -78,15 +80,29 @@ Renderer::Renderer(const Shader &shaderProgram, std::vector<SpriteLocation> spri
 }
 
 void Renderer::Render() {
+    float positions[] = {0.0f,0.0f};
+    Render(positions);
+}
+
+void Renderer::Render(float positions[2]) {
     shaderProgram.Activate();
 
-    auto loc = glGetUniformLocation(shaderProgram.ID, "textures");
+    auto locTextures = glGetUniformLocation(shaderProgram.ID, "textures");
     int samplers[1] = {0};
-    glUniform1iv(loc, 1, samplers);
+    glUniform1iv(locTextures, 1, samplers);
+
+    auto model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(positions[0], positions[1], 0.0f));
+    int modelLog = glGetUniformLocation(shaderProgram.ID, "model");
+    glUniformMatrix4fv(modelLog, 1, GL_FALSE, glm::value_ptr(model));
 
     ebo.Bind();
     vao.Bind();
+    vbo.Bind();
     glDrawElements(GL_TRIANGLES, sizeof(GLuint) * 6 * spriteSize / sizeof(int), GL_UNSIGNED_INT, 0);
+//    ebo.Unbind();
+//    vao.Unbind();
+//    vbo.Bind();
 }
 
 void Renderer::Delete() {
