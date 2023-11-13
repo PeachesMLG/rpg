@@ -58,23 +58,34 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
 
 
 void processInput(GLFWwindow *window, float deltaTime, Player *player) {
-    const float cameraSpeed = 0.05f;
+    const float cameraSpeed = 0.01f;
+    float moveX = 0.0f, moveY = 0.0f;
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        player->y += cameraSpeed * deltaTime;
+        moveY += cameraSpeed * deltaTime;
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        player->y -= cameraSpeed * deltaTime;
+        moveY -= cameraSpeed * deltaTime;
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        player->x -= cameraSpeed * deltaTime;
+        moveX -= cameraSpeed * deltaTime;
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        player->x += cameraSpeed * deltaTime;
+        moveX += cameraSpeed * deltaTime;
     }
+
+    // Normalize diagonal movement
+    if (moveX != 0.0f && moveY != 0.0f) {
+        float normalizationFactor = cameraSpeed * deltaTime / sqrt(moveX * moveX + moveY * moveY);
+        moveX *= normalizationFactor;
+        moveY *= normalizationFactor;
+    }
+
+    player->x += moveX;
+    player->y += moveY;
 }
 
 int main() {
