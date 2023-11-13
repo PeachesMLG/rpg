@@ -9,10 +9,10 @@
 #include "glm/gtc/type_ptr.hpp"
 
 Vertex verticies[] = {
-        0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-        1.0f, 0.0f, 0.0f
+        0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+        1.0f, 1.0f, 0.0f, 1.0f, -1.0f, 0.0f,
+        1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f
 };
 
 GLuint indicies[] = {
@@ -31,14 +31,12 @@ Renderer::Renderer(const Shader &shaderProgram) : shaderProgram(shaderProgram) {
     ebo.Unbind();
 }
 
-void Renderer::Render(float Position[2], float Color[3]) {
-
+void Renderer::Render() {
     shaderProgram.Activate();
 
-    auto model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(Position[0], Position[1], 0.0f));
-    int modelLog = glGetUniformLocation(shaderProgram.ID, "model");
-    glUniformMatrix4fv(modelLog, 1, GL_FALSE, glm::value_ptr(model));
+    auto loc = glGetUniformLocation(shaderProgram.ID, "textures");
+    int samplers[1] = {0};
+    glUniform1iv(loc, 1, samplers);
 
     ebo.Bind();
     vao.Bind();

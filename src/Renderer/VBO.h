@@ -11,6 +11,8 @@ public:
     VBO();
     VBO(Vertex *vertices, GLsizeiptr size);
 
+    void Update(Vertex *vertices, GLsizeiptr size);
+
     void Bind();
 
     void Unbind();

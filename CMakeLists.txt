@@ -22,6 +22,8 @@ add_executable(rpg
         src/Renderer/Renderer.h
         src/Camera.cpp
         src/Camera.h
+        src/Renderer/Textures.cpp
+        src/Renderer/Textures.h
 )
 
 target_link_libraries(rpg PUBLIC glfw glad glm)

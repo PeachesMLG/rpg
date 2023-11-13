@@ -3,17 +3,29 @@
 #include <iostream>
 #include "Renderer/Renderer.h"
 #include "Camera.h"
+#include "Renderer/Textures.h"
+
+#define STB_IMAGE_IMPLEMENTATION
+
+#include "../../dependencies/stb/stb_image.h"
+
 
 const GLchar *vert = R"END(
 #version 330 core
 layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec2 aTexCoord;
+layout (location = 2) in float aTexId;
 
-uniform mat4 model;
 uniform mat4 view;
+
+out vec2 texCoord;
+out float texId;
 
 void main()
 {
-    gl_Position = view * model * vec4(aPos, 1.0);
+    gl_Position = view * vec4(aPos, 1.0);
+    texCoord = aTexCoord;
+    texId = aTexId;
 }
 )END";
 
@@ -22,11 +34,14 @@ const GLchar *frag = R"END(
 
 out vec4 FragColor;
 
-//uniform vec3 color;
+in vec2 texCoord;
+in float texId;
+
+uniform sampler2D[1] textures;
 
 void main()
 {
-    FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+    FragColor = FragColor = texture(textures[int(texId)], texCoord);
 }
 )END";
 
@@ -83,10 +98,14 @@ int main() {
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     glClearColor(0.192156862745f, 0.180392156863f, 0.16862745098f, 1.0f);
 
     Shader shaderProgram(vert, frag);
+
+    auto texture = Textures::GenerateTexture("/home/chris/CLionProjects/rpg/assets/wooden.png", 0);
 
     Renderer renderer(shaderProgram);
 
@@ -97,15 +116,10 @@ int main() {
         double deltaTime = startTime - lastTime;
         processInput(window, (float) deltaTime);
 
-        // Render Here
         glClear(GL_COLOR_BUFFER_BIT);
 
-        float position[2] = {0.0f, 0.0f};
-        float color[3] = {0.97f, 0.97f, 0.43f};
-
-
         Camera::applyView(shaderProgram.ID);
-        renderer.Render(position, color);
+        renderer.Render();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
