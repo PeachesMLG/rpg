@@ -105,17 +105,29 @@ int main() {
 
     auto texture = Textures::GenerateTexture("/home/chris/CLionProjects/rpg/assets/terrain.png", 0);
     Sprite sprite(0, 1, 1, 16, 480, 769);
-    std::vector<SpriteLocation> spriteLocations;
-    spriteLocations.push_back({sprite, 0, 0, 0});
-    spriteLocations.push_back({sprite, 1, 0, 0});
-    spriteLocations.push_back({sprite, 1, 1, 0});
-    spriteLocations.push_back({sprite, 0, 1, 0});
+    Sprite sprite2(0, 1, 20, 16, 480, 769);
 
-    Renderer renderer(shaderProgram, spriteLocations);
+    std::vector<SpriteLocation> spriteLocations1;
+    for (int x = -10; x < 10; ++x) {
+        for (int y = -10; y < 10; ++y) {
+            spriteLocations1.push_back({sprite, static_cast<float>(x), static_cast<float>(y), 0});
+        }
+    }
+    std::vector<SpriteLocation> spriteLocations2;
+    for (int x = -10; x < 10; ++x) {
+        for (int y = -10; y < 10; ++y) {
+            spriteLocations2.push_back({sprite2, static_cast<float>(x), static_cast<float>(y), 0});
+        }
+    }
+
+    Renderer renderer(shaderProgram, spriteLocations1);
 
     double lastTime = glfwGetTime();
 
+    int i = 0;
+
     while (!glfwWindowShouldClose(window)) {
+        i++;
         double startTime = glfwGetTime();
         double deltaTime = startTime - lastTime;
         processInput(window, (float) deltaTime);
@@ -123,6 +135,11 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         Camera::applyView(shaderProgram.ID);
+        if (i % 100 < 50) {
+            renderer.UpdateSprites(spriteLocations1);
+        } else {
+            renderer.UpdateSprites(spriteLocations2);
+        }
         renderer.Render();
 
         glfwSwapBuffers(window);

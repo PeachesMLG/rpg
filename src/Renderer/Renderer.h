@@ -21,6 +21,7 @@ public:
 
 private:
     void setIndicies(std::vector<SpriteLocation> sprites);
+    void SetSpriteData(std::vector<SpriteLocation> sprites);
     Shader shaderProgram;
     VAO vao;
     VBO vbo;

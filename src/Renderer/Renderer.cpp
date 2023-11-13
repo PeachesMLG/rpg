@@ -18,7 +18,7 @@ void Renderer::setIndicies(std::vector<SpriteLocation> sprites) {
     }
 }
 
-void Renderer::UpdateSprites(std::vector<SpriteLocation> sprites) {
+void Renderer::SetSpriteData(std::vector<SpriteLocation> sprites) {
     spriteSize = sprites.size();
     for (auto i = 0; i < sprites.size(); ++i) {
         const SpriteLocation &spriteLocation = sprites[i];
@@ -26,24 +26,38 @@ void Renderer::UpdateSprites(std::vector<SpriteLocation> sprites) {
 
         // Bottom Left Vertex
         Renderer::verticies[(i * 4) + 0] = Vertex(
-                {{spriteLocation.x, spriteLocation.y, spriteLocation.z}, {sprite.xMin, sprite.yMin},
-                 static_cast<float>(sprite.textureId)});
+                {{spriteLocation.x, spriteLocation.y, spriteLocation.z},
+                 {sprite.xMin, sprite.yMin},
+                 static_cast<float>(sprite.textureId)}
+        );
 
         // Top Left Vertex
         Renderer::verticies[(i * 4) + 1] = Vertex(
-                {{spriteLocation.x, spriteLocation.y + 1, spriteLocation.z}, {sprite.xMin, sprite.yMax},
-                 static_cast<float>(sprite.textureId)});
+                {{spriteLocation.x, spriteLocation.y + 1, spriteLocation.z},
+                 {sprite.xMin, sprite.yMax},
+                 static_cast<float>(sprite.textureId)}
+        );
 
         // Top Right Vertex
         Renderer::verticies[(i * 4) + 2] = Vertex(
-                {{spriteLocation.x + 1, spriteLocation.y + 1, spriteLocation.z}, {sprite.xMax, sprite.yMax},
-                 static_cast<float>(sprite.textureId)});
+                {{spriteLocation.x + 1, spriteLocation.y + 1, spriteLocation.z},
+                 {sprite.xMax, sprite.yMax},
+                 static_cast<float>(sprite.textureId)}
+        );
 
         // Bottom Right Vertex
         Renderer::verticies[(i * 4) + 3] = Vertex(
-                {{spriteLocation.x + 1, spriteLocation.y, spriteLocation.z}, {sprite.xMax, sprite.yMin},
-                 static_cast<float>(sprite.textureId)});
+                {{spriteLocation.x + 1, spriteLocation.y, spriteLocation.z},
+                 {sprite.xMax, sprite.yMin},
+                 static_cast<float>(sprite.textureId)}
+        );
     }
+}
+
+void Renderer::UpdateSprites(std::vector<SpriteLocation> sprites) {
+    SetSpriteData(sprites);
+
+    vbo.Update(Renderer::verticies, sizeof(Vertex) * 4 * sprites.size());
 }
 
 Renderer::Renderer(const Shader &shaderProgram, std::vector<SpriteLocation> sprites) : shaderProgram(shaderProgram) {
