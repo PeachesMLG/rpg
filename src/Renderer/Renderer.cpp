@@ -1,21 +1,25 @@
 #include <glad/glad.h>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/string_cast.hpp>
 #include <vector>
 #include "Renderer.h"
 #include "Vertex.h"
 #include "Shader.h"
 #include "VAO.h"
 #include "EBO.h"
-#include "glm/gtc/type_ptr.hpp"
 #include "Sprite.h"
 
-GLuint indicies[] = {
-        0, 1, 3,
-        1, 2, 3
-};
+void Renderer::setIndicies(std::vector<SpriteLocation> sprites) {
+    for (auto i = 0; i < sprites.size(); ++i) {
+        Renderer::indicies[(i * 6) + 0] = (i * 4) + 0;
+        Renderer::indicies[(i * 6) + 1] = (i * 4) + 1;
+        Renderer::indicies[(i * 6) + 2] = (i * 4) + 3;
+        Renderer::indicies[(i * 6) + 3] = (i * 4) + 1;
+        Renderer::indicies[(i * 6) + 4] = (i * 4) + 2;
+        Renderer::indicies[(i * 6) + 5] = (i * 4) + 3;
+    }
+}
 
-void Renderer::UpdateVerticies(std::vector<SpriteLocation> sprites) {
+void Renderer::UpdateSprites(std::vector<SpriteLocation> sprites) {
+    spriteSize = sprites.size();
     for (auto i = 0; i < sprites.size(); ++i) {
         const SpriteLocation &spriteLocation = sprites[i];
         const Sprite &sprite = spriteLocation.sprite;
@@ -43,10 +47,15 @@ void Renderer::UpdateVerticies(std::vector<SpriteLocation> sprites) {
 }
 
 Renderer::Renderer(const Shader &shaderProgram, std::vector<SpriteLocation> sprites) : shaderProgram(shaderProgram) {
-    UpdateVerticies(sprites);
+    verticies = new Vertex[sprites.size() * 4];
+    indicies = new GLuint[sprites.size() * 6];
+
+    setIndicies(sprites);
+    UpdateSprites(sprites);
+
     vao.Bind();
     vbo = VBO(Renderer::verticies, sizeof(Vertex) * 4 * sprites.size());
-    ebo = EBO(indicies, sizeof(indicies));
+    ebo = EBO(Renderer::indicies, sizeof(GLuint) * 6 * sprites.size());
 
     vao.LinkVBO(vbo);
     vao.Unbind();
@@ -63,7 +72,7 @@ void Renderer::Render() {
 
     ebo.Bind();
     vao.Bind();
-    glDrawElements(GL_TRIANGLES, sizeof(indicies) / sizeof(int), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, sizeof(GLuint) * 6 * spriteSize / sizeof(int), GL_UNSIGNED_INT, 0);
 }
 
 void Renderer::Delete() {

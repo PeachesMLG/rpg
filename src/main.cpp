@@ -107,6 +107,9 @@ int main() {
     Sprite sprite(0, 1, 1, 16, 480, 769);
     std::vector<SpriteLocation> spriteLocations;
     spriteLocations.push_back({sprite, 0, 0, 0});
+    spriteLocations.push_back({sprite, 1, 0, 0});
+    spriteLocations.push_back({sprite, 1, 1, 0});
+    spriteLocations.push_back({sprite, 0, 1, 0});
 
     Renderer renderer(shaderProgram, spriteLocations);
 

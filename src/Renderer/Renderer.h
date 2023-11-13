@@ -13,18 +13,21 @@ class Renderer {
 public:
     Renderer(const Shader &shaderProgram, std::vector<SpriteLocation> sprites);
 
-    void UpdateVerticies(std::vector<SpriteLocation> sprites);
+    void UpdateSprites(std::vector<SpriteLocation> sprites);
 
     void Render();
 
     void Delete();
 
 private:
+    void setIndicies(std::vector<SpriteLocation> sprites);
     Shader shaderProgram;
     VAO vao;
     VBO vbo;
     EBO ebo;
-    Vertex verticies[];
+    Vertex *verticies;
+    GLuint *indicies;
+    int spriteSize;
 };
 
 
