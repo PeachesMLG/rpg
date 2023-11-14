@@ -19,13 +19,14 @@ layout (location = 2) in float aTexId;
 
 uniform mat4 model;
 uniform mat4 view;
+uniform mat4 proj;
 
 out vec2 texCoord;
 out float texId;
 
 void main()
 {
-    gl_Position = view * model * vec4(aPos, 1.0);
+    gl_Position = proj * view * model * vec4(aPos, 1.0);
     texCoord = aTexCoord;
     texId = aTexId;
 }
@@ -51,14 +52,8 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
-    Camera::zoom += yoffset * 0.1f;
-    Camera::zoom = std::max(0.1f, Camera::zoom);
-}
-
-
 void processInput(GLFWwindow *window, float deltaTime, Player *player) {
-    const float cameraSpeed = 0.01f;
+    const float cameraSpeed = 0.05f;
     float moveX = 0.0f, moveY = 0.0f;
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -102,7 +97,6 @@ int main() {
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetScrollCallback(window, scroll_callback);
 
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
