@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.22)
 project(rpg)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -22,11 +22,6 @@ add_executable(rpg
         src/Renderer/Renderer.h
         src/Camera.cpp
         src/Camera.h
-        src/Renderer/Textures.cpp
-        src/Renderer/Textures.h
-        src/Renderer/Sprite.h
-        src/Player.cpp
-        src/Player.h
 )
 
 target_link_libraries(rpg PUBLIC glfw glad glm)

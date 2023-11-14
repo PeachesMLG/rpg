@@ -7,8 +7,6 @@ struct Color {
 
 struct Vertex {
     float Position[3];
-    float TextureCord[2];
-    float TextureId;
 };
 
 #endif //RPG_VERTEX_H

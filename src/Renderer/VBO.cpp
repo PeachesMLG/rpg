@@ -6,22 +6,12 @@ VBO::VBO(Vertex *vertices, GLsizeiptr size) {
     glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 }
 
-VBO::VBO() {
-
-}
-
 void VBO::Bind() {
     glBindBuffer(GL_ARRAY_BUFFER, ID);
 }
 
 void VBO::Unbind() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-void VBO::Update(Vertex *vertices, GLsizeiptr size) {
-    Bind();
-    glBufferSubData(GL_ARRAY_BUFFER, 0, size, vertices);
-    Unbind();
 }
 
 void VBO::Delete() {
