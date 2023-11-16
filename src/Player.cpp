@@ -8,8 +8,8 @@ Player::Player() {
 }
 
 std::vector<SpriteLocation> Player::GetSpriteLocations() {
-    Sprite sprite1(0, 5, 5, 16, 480, 769);
-    Sprite sprite2(0, 5, 6, 16, 480, 769);
+    Sprite sprite1(0, 9, 11, 16, 304, 720);
+    Sprite sprite2(0, 9, 10, 16, 304, 720);
 
     std::vector<SpriteLocation> spriteLocations;
     spriteLocations.push_back({sprite1, x, y, 0});

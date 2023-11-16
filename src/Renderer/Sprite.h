@@ -9,7 +9,7 @@ struct Sprite {
     float yMin;
     float yMax;
 
-    Sprite(int textureId, int x, int y, float size, float height, float width) {
+    Sprite(int textureId, int x, int y, float size, float width, float height) {
         this->textureId = textureId;
         this->xMin = static_cast<float>(x) * size / width;
         this->xMax = static_cast<float>(x + 1) * size / width;
@@ -18,7 +18,7 @@ struct Sprite {
     }
 };
 
-struct SpriteLocation{
+struct SpriteLocation {
     Sprite sprite;
     float x;
     float y;

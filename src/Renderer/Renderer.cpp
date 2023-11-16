@@ -29,28 +29,28 @@ void Renderer::SetSpriteData(std::vector<SpriteLocation> sprites) {
         // Bottom Left Vertex
         Renderer::verticies[(i * 4) + 0] = Vertex(
                 {{spriteLocation.x, spriteLocation.y, spriteLocation.z},
-                 {sprite.xMin, sprite.yMin},
+                 {sprite.xMin, sprite.yMax},
                  static_cast<float>(sprite.textureId)}
         );
 
         // Top Left Vertex
         Renderer::verticies[(i * 4) + 1] = Vertex(
                 {{spriteLocation.x, spriteLocation.y + 1, spriteLocation.z},
-                 {sprite.xMin, sprite.yMax},
+                 {sprite.xMin, sprite.yMin},
                  static_cast<float>(sprite.textureId)}
         );
 
         // Top Right Vertex
         Renderer::verticies[(i * 4) + 2] = Vertex(
                 {{spriteLocation.x + 1, spriteLocation.y + 1, spriteLocation.z},
-                 {sprite.xMax, sprite.yMax},
+                 {sprite.xMax, sprite.yMin},
                  static_cast<float>(sprite.textureId)}
         );
 
         // Bottom Right Vertex
         Renderer::verticies[(i * 4) + 3] = Vertex(
                 {{spriteLocation.x + 1, spriteLocation.y, spriteLocation.z},
-                 {sprite.xMax, sprite.yMin},
+                 {sprite.xMax, sprite.yMax},
                  static_cast<float>(sprite.textureId)}
         );
     }

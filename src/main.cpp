@@ -114,7 +114,7 @@ int main() {
 
     auto texture = Textures::GenerateTexture("/home/chris/CLionProjects/rpg/assets/terrain.png", 0);
 
-    Sprite sprite(0, 1, 1, 16, 480, 769);
+    Sprite sprite(0, 3, 0, 16, 304, 720);
     std::vector<SpriteLocation> spriteLocations;
     for (int x = -10; x < 10; ++x) {
         for (int y = -10; y < 10; ++y) {
@@ -139,7 +139,6 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         Camera::applyView(shaderProgram.ID, player);
-        sprite = Sprite(0, 1, i % 100 < 50 ? 1 : 20, 16, 480, 769);
 
         spriteLocations.clear();
         for (int x = -10; x < 10; ++x) {
