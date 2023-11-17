@@ -53,7 +53,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
 }
 
 void processInput(GLFWwindow *window, float deltaTime, Player *player) {
-    const float cameraSpeed = 0.05f;
+    const float cameraSpeed = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ? 8.0f : 4.0f;
     float moveX = 0.0f, moveY = 0.0f;
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -155,6 +155,7 @@ int main() {
         glfwSwapBuffers(window);
         glfwPollEvents();
 
+        lastTime = startTime;
         double time = (glfwGetTime() - startTime) * 1000;
         std::string title = "RPG - FPS: " + std::to_string((int) (1000 / time));
         glfwSetWindowTitle(window, title.c_str());
